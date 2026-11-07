@@ -16,7 +16,8 @@ import {
   X,
   UploadCloud,
   Lock,
-  ArrowRight
+  ArrowRight,
+  Copy
 } from 'lucide-react';
 import { associationInfo } from '../data/associationData';
 
@@ -54,7 +55,17 @@ export default function MembershipSection() {
   const [searchError, setSearchError] = useState('');
   const [updatingPhoto, setUpdatingPhoto] = useState(false);
   const [photoUpdateSuccess, setPhotoUpdateSuccess] = useState(false);
+  const [copiedAccount, setCopiedAccount] = useState(false);
   const cardPhotoInputRef = useRef(null);
+
+  const handleCopyAccountNo = () => {
+    const accNo = associationInfo.bankAccount?.accountNumber || '110112092968';
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(accNo);
+      setCopiedAccount(true);
+      setTimeout(() => setCopiedAccount(false), 2500);
+    }
+  };
 
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBYqrpI9_1dLlVt69aOswwb-cdw_36AQa7LUzZGG-eiqFsyECWm0cgR7pVEckl7yoKuA/exec';
 
@@ -621,6 +632,82 @@ export default function MembershipSection() {
                         placeholder="e.g. name@canarabank.com"
                         className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
                       />
+                    </div>
+
+                    {/* Official Association Bank Account Details Card */}
+                    <div className="bg-emerald-50/90 border-2 border-emerald-500/50 rounded-2xl p-5 shadow-sm">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3.5 border-b border-emerald-200">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-9 h-9 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-black text-xs shadow-sm shrink-0">
+                            CB
+                          </div>
+                          <div>
+                            <span className="text-[11px] font-black uppercase tracking-wider text-emerald-950 block">
+                              Official Association Bank Account
+                            </span>
+                            <span className="text-xs text-emerald-700 font-bold">
+                              Canara Bank &bull; Subscription Remittance
+                            </span>
+                          </div>
+                        </div>
+                        <div className="text-[11px] font-bold text-emerald-900 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300 w-fit">
+                          Fee: &#8377;1,306 (Annual) / &#8377;118 (Monthly)
+                        </div>
+                      </div>
+
+                      <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <div className="space-y-1">
+                          <span className="text-[11px] font-bold uppercase text-emerald-800 block">
+                            Account Name:
+                          </span>
+                          <div className="text-sm font-extrabold text-slate-900 leading-snug">
+                            {associationInfo.bankAccount.shortAccountName}
+                          </div>
+                          <div className="text-xs text-slate-600 font-medium">
+                            (Canara Bank General Category Staff Welfare Association)
+                          </div>
+                        </div>
+
+                        <div className="bg-white/80 p-3 rounded-xl border border-emerald-200">
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-[11px] font-bold uppercase text-emerald-800">
+                              Account Number:
+                            </span>
+                            <button
+                              type="button"
+                              onClick={handleCopyAccountNo}
+                              className="text-[11px] font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 cursor-pointer bg-emerald-100 hover:bg-emerald-200 px-2.5 py-0.5 rounded-md transition-colors"
+                            >
+                              {copiedAccount ? (
+                                <>
+                                  <Check className="w-3.5 h-3.5 text-emerald-700" />
+                                  <span>Copied!</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Copy className="w-3.5 h-3.5 text-emerald-700" />
+                                  <span>Copy A/c</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
+                          
+                          <div 
+                            onClick={handleCopyAccountNo}
+                            title="Click to copy account number"
+                            className="bg-[#0b5345] hover:bg-[#084237] text-white font-mono font-black text-lg sm:text-xl py-2 px-3 rounded-lg text-center tracking-wider shadow-inner cursor-pointer transition-colors"
+                          >
+                            {associationInfo.bankAccount.accountNumber}
+                          </div>
+                          <div className="text-[10px] text-emerald-700 italic text-center mt-1">
+                            ({associationInfo.bankAccount.verificationNote})
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-3.5 pt-2.5 border-t border-emerald-200 text-[11px] text-emerald-800 leading-relaxed">
+                        <strong>Payment Instructions:</strong> Transfer the subscription fee using Canara Bank NetBanking, Mobile Banking (CANDI), NEFT, IMPS, or any UPI app to the account above. Copy the <strong>Transaction ID / UTR</strong> and paste it into the field below.
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">

@@ -22,6 +22,13 @@ export const associationInfo = {
     admission: 10,
     monthly: 108,
     annual: 1296
+  },
+  bankAccount: {
+    accountName: 'CBGCSWA (Canara Bank General Category Staff Welfare Association)',
+    shortAccountName: 'CBGCSWA',
+    accountNumber: '110112092968',
+    bankName: 'Canara Bank',
+    verificationNote: 'Verify with your bank/UPI app'
   }
 };
 

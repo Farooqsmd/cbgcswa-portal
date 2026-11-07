@@ -54,6 +54,9 @@ export default function Footer() {
             <div className="pt-2 space-y-1">
               <div>Email: <a href={`mailto:${associationInfo.email}`} className="text-amber-400 hover:underline">{associationInfo.email}</a></div>
               <div>Phone: <a href={`tel:${associationInfo.phone}`} className="text-white font-bold">{associationInfo.phone}</a></div>
+              <div className="text-slate-400 text-[11px] pt-1">
+                Canara Bank A/c: <span className="font-mono text-amber-300 font-bold">{associationInfo.bankAccount?.accountNumber || '110112092968'}</span>
+              </div>
             </div>
           </div>
         </div>

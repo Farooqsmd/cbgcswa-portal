@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { MapPin, Mail, Phone, Send, CheckCircle2, Building2, Clock } from 'lucide-react';
+import { MapPin, Mail, Phone, Send, CheckCircle2, Building2, Clock, Copy, Check, CreditCard } from 'lucide-react';
 import { associationInfo } from '../data/associationData';
 
 export default function ContactSection() {
+  const [copied, setCopied] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -93,6 +94,78 @@ export default function ContactSection() {
                     <div className="text-[11px] text-slate-400 font-semibold uppercase">Availability</div>
                     <span className="font-semibold text-slate-700">Bank Working Hours &amp; Weekends</span>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Official Bank Account Details */}
+            <div className="bg-emerald-50/90 border-2 border-emerald-500/40 p-6 rounded-2xl shadow-sm space-y-3.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                    CB
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-black uppercase text-emerald-950 tracking-wider block">
+                      Association Bank Account
+                    </span>
+                    <span className="text-[11px] text-emerald-700 font-semibold">
+                      Canara Bank Official Account
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator?.clipboard?.writeText(associationInfo.bankAccount?.accountNumber || '110112092968');
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2500);
+                  }}
+                  className="text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 cursor-pointer bg-emerald-100 hover:bg-emerald-200 px-2.5 py-1 rounded-md transition-colors"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-700" />
+                      <span>Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5 text-emerald-700" />
+                      <span>Copy No.</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              <div>
+                <span className="text-[11px] font-bold uppercase text-emerald-800 block mb-0.5">
+                  Account Name:
+                </span>
+                <div className="text-sm font-extrabold text-slate-900">
+                  {associationInfo.bankAccount.shortAccountName}
+                </div>
+                <div className="text-xs text-slate-600">
+                  (Canara Bank General Category Staff Welfare Association)
+                </div>
+              </div>
+
+              <div>
+                <span className="text-[11px] font-bold uppercase text-emerald-800 block mb-1">
+                  Account Number:
+                </span>
+                <div 
+                  onClick={() => {
+                    navigator?.clipboard?.writeText(associationInfo.bankAccount?.accountNumber || '110112092968');
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2500);
+                  }}
+                  title="Click to copy account number"
+                  className="bg-[#0b5345] hover:bg-[#084237] text-white font-mono font-black text-lg py-2 px-3 rounded-xl text-center tracking-wider shadow-inner cursor-pointer transition-colors"
+                >
+                  {associationInfo.bankAccount.accountNumber}
+                </div>
+                <div className="text-[10px] text-emerald-700 italic text-center mt-1">
+                  ({associationInfo.bankAccount.verificationNote})
                 </div>
               </div>
             </div>

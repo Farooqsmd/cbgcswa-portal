@@ -707,10 +707,9 @@ export default function MembershipSection() {
                           name="paymentMode"
                           value={formData.paymentMode}
                           onChange={handleInputChange}
-                          className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none bg-white transition-all"
+                          className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none bg-white transition-all cursor-pointer"
                         >
                           <option value="annual">Annual Subscription (&#8377;1,296 + &#8377;10 Admission = &#8377;1,306)</option>
-                          <option value="checkoff">Salary Deduction via Check-Off (When approved)</option>
                         </select>
                       </div>
 

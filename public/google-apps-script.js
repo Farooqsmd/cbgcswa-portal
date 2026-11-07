@@ -4,7 +4,7 @@
  * Regd. No. 99 of 2023 under AP Societies Registration Act 2001 (Jurisdiction: Whole of India)
  * =========================================================================================
  * 
- * COLUMN STRUCTURE (Matches your Google Sheet exactly):
+ * COLUMN STRUCTURE (Matches your Google Sheet):
  * Col A (1):  Date
  * Col B (2):  Ref Number
  * Col C (3):  Full Name
@@ -18,6 +18,7 @@
  * Col K (11): Address
  * Col L (12): Status (Pending Review / Approved / On Hold)
  * Col M (13): Photo URL (Google Drive direct photo link)
+ * Col N (14): Transaction ID / UTR No. (Mandatory subscription payment ref)
  * =========================================================================================
  */
 
@@ -30,7 +31,7 @@ function authorizeDrive() {
   Logger.log("SUCCESS: Google Drive permissions authorized!");
 }
 
-// Helper: Save Base64 photo to Drive and return universal thumbnail embed URL
+// Helper: Save Base64 photo to Drive and return universal direct CDN embed URL
 function savePhotoToDrive(base64Str, staffId, fullName) {
   if (!base64Str || base64Str.indexOf("base64,") === -1) {
     return "";
@@ -68,6 +69,11 @@ function doPost(e) {
       sheet.getRange(1, 13).setValue("Photo URL");
     }
 
+    // Ensure cell N1 has the header "Transaction ID"
+    if (sheet.getRange(1, 14).getValue() === "") {
+      sheet.getRange(1, 14).setValue("Transaction ID");
+    }
+
     // Save photo to Google Drive
     var photoUrl = savePhotoToDrive(data.photoBase64, data.staffId, data.fullName);
 
@@ -93,21 +99,22 @@ function doPost(e) {
     }
 
     // ACTION: NEW MEMBERSHIP SUBMISSION
-    // Columns match your sheet: Col L = Status, Col M = Photo URL
+    // Columns match your sheet: Col L = Status, Col M = Photo URL, Col N = Transaction ID
     var newRow = [
-      new Date(),                // A: Date
-      data.referenceNumber || "",// B: Ref Number
-      data.fullName || "",       // C: Full Name
-      data.staffId || "",        // D: Staff ID
-      data.cadre || "",          // E: Cadre
-      data.branchName || "",     // F: Branch & DP
-      data.circleOffice || "",   // G: Circle/RO
-      data.mobile || "",         // H: Mobile
-      data.email || "",          // I: Email
-      data.paymentMode || "",    // J: Payment Mode
-      data.address || "",        // K: Address
-      "Pending Review",          // L: Status (uses your dropdown!)
-      photoUrl                   // M: Photo URL (Drive photo link!)
+      new Date(),                 // A: Date
+      data.referenceNumber || "", // B: Ref Number
+      data.fullName || "",        // C: Full Name
+      data.staffId || "",         // D: Staff ID
+      data.cadre || "",           // E: Cadre
+      data.branchName || "",      // F: Branch & DP
+      data.circleOffice || "",    // G: Circle/RO
+      data.mobile || "",          // H: Mobile
+      data.email || "",           // I: Email
+      data.paymentMode || "",     // J: Payment Mode
+      data.address || "",         // K: Address
+      "Pending Review",           // L: Status (dropdown in Col L)
+      photoUrl,                   // M: Photo URL (Drive link)
+      data.transactionId || ""    // N: Transaction ID / UTR Number
     ];
 
     sheet.appendRow(newRow);
@@ -115,6 +122,7 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({
       status: "success",
       referenceNumber: data.referenceNumber,
+      transactionId: data.transactionId || "",
       photoUrl: photoUrl
     })).setMimeType(ContentService.MimeType.JSON);
 
@@ -146,12 +154,24 @@ function doGet(e) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
+    // Identify Transaction ID column dynamically if headers exist
+    var headers = data[0];
+    var txnColIndex = 13; // default Col N
+    for (var h = 0; h < headers.length; h++) {
+      var hStr = (headers[h] || "").toString().toLowerCase();
+      if (hStr.indexOf("transaction") !== -1 || hStr.indexOf("txn") !== -1 || hStr.indexOf("utr") !== -1) {
+        txnColIndex = h;
+        break;
+      }
+    }
+
     // Search from bottom up for latest entry
     for (var i = data.length - 1; i >= 1; i--) {
       var rowStaff = data[i][3] ? data[i][3].toString().trim().toLowerCase() : ""; // Col D
       if (rowStaff === staffId) {
         var statusVal = data[i][11] ? data[i][11].toString().trim() : "Pending Review"; // Col L: Status
         var rawPhoto = data[i][12] ? data[i][12].toString().trim() : "";               // Col M: Photo URL
+        var txnVal = data[i][txnColIndex] ? data[i][txnColIndex].toString().trim() : "";// Col N / detected column
 
         // Format photo URL
         var photoUrl = "";
@@ -183,7 +203,8 @@ function doGet(e) {
             paymentMode: data[i][9] || "",      // Col J
             address: data[i][10] || "",         // Col K
             status: statusVal,                  // Col L: Status
-            photoUrl: photoUrl                  // Col M: Photo URL
+            photoUrl: photoUrl,                 // Col M: Photo URL
+            transactionId: txnVal               // Col N: Transaction ID
           }
         })).setMimeType(ContentService.MimeType.JSON);
       }

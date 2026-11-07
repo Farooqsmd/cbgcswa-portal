@@ -35,6 +35,7 @@ export default function MembershipSection() {
     email: '',
     address: '',
     paymentMode: 'annual',
+    transactionId: '',
     agreeRules: false
   });
 
@@ -202,6 +203,10 @@ export default function MembershipSection() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.transactionId || !formData.transactionId.trim()) {
+      alert('Please enter your Payment Transaction ID / UTR Number.');
+      return;
+    }
     if (!formData.agreeRules) {
       alert('Please agree to abide by the rules and bye-laws of the Association.');
       return;
@@ -268,6 +273,7 @@ export default function MembershipSection() {
       email: '',
       address: '',
       paymentMode: 'annual',
+      transactionId: '',
       agreeRules: false
     });
   };
@@ -602,25 +608,25 @@ export default function MembershipSection() {
                       </div>
                     </div>
 
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase">
+                        Email Address <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        required
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="e.g. name@canarabank.com"
+                        className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                      />
+                    </div>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
                         <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase">
-                          Email Address <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          required
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          placeholder="e.g. name@canarabank.com"
-                          className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase">
-                          Payment Preference
+                          Payment Preference <span className="text-red-500">*</span>
                         </label>
                         <select
                           name="paymentMode"
@@ -632,6 +638,24 @@ export default function MembershipSection() {
                           <option value="monthly">Monthly Subscription (&#8377;108 / month + &#8377;10 Admission)</option>
                           <option value="checkoff">Salary Deduction via Check-Off (When approved)</option>
                         </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase">
+                          Payment Transaction ID / UTR <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="transactionId"
+                          required
+                          value={formData.transactionId}
+                          onChange={handleInputChange}
+                          placeholder="e.g. 429381920192 or UPI Ref"
+                          className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none font-mono transition-all"
+                        />
+                        <span className="text-[11px] text-slate-500 block mt-1">
+                          Mandatory: Enter UPI Ref No. / UTR from your subscription transfer.
+                        </span>
                       </div>
                     </div>
 
@@ -740,6 +764,10 @@ export default function MembershipSection() {
                         <div className="grid grid-cols-2 gap-2 border-b border-slate-200/60 pb-1.5">
                           <span className="text-slate-500 font-semibold">Payment Mode:</span>
                           <span className="font-bold text-slate-900 capitalize">{submittedData.paymentMode}</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 border-b border-slate-200/60 pb-1.5">
+                          <span className="text-slate-500 font-semibold">Transaction ID / UTR:</span>
+                          <span className="font-bold text-blue-900 font-mono">{submittedData.transactionId}</span>
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           <span className="text-slate-500 font-semibold">Date of Application:</span>
@@ -954,6 +982,10 @@ export default function MembershipSection() {
                       <div>
                         <span className="text-slate-500 font-semibold block">Branch / Office:</span>
                         <span className="font-bold text-slate-900">{searchResult.branchName}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 font-semibold block">Transaction Ref / UTR:</span>
+                        <span className="font-bold text-slate-900 font-mono">{searchResult.transactionId || 'Recorded'}</span>
                       </div>
                     </div>
 

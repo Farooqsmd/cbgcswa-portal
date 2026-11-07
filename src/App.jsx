@@ -10,6 +10,7 @@ import MembershipSection from './components/MembershipSection';
 import DownloadsSection from './components/DownloadsSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
+import AIChatbot from './components/AIChatbot';
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
         <ContactSection />
       </main>
       <Footer />
+      <AIChatbot />
     </div>
   );
 }

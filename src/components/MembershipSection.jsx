@@ -386,7 +386,7 @@ export default function MembershipSection() {
         {activeTab === 'register' && (
           <>
             {/* Fee Information Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12">
               <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div>
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">One-Time</span>
@@ -401,25 +401,13 @@ export default function MembershipSection() {
 
               <div className="bg-gradient-to-br from-blue-900 to-blue-950 text-white p-6 rounded-2xl shadow-md flex flex-col justify-between">
                 <div>
-                  <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Monthly Pool</span>
-                  <div className="text-2xl font-black text-white mt-1 mb-2">&#8377;108 / Month</div>
+                  <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Annual Option</span>
+                  <div className="text-2xl font-black text-white mt-1 mb-2">&#8377;1,296 / Year</div>
                   <h3 className="font-bold text-sm text-amber-200">Welfare Subscription</h3>
-                  <p className="text-xs text-slate-300 mt-1">Dedicated entirely to member welfare, educational aid, and legal assistance.</p>
+                  <p className="text-xs text-slate-300 mt-1">Convenient once-a-year subscription dedicated entirely to member welfare and legal aid.</p>
                 </div>
                 <div className="mt-4 pt-3 border-t border-blue-800/80 text-[11px] text-amber-300 font-semibold flex items-center gap-1">
                   <ShieldCheck className="w-3.5 h-3.5" /> Zero Commercial Expenses
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
-                <div>
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Annual Option</span>
-                  <div className="text-2xl font-black text-slate-900 mt-1 mb-2">&#8377;1,296 / Year</div>
-                  <h3 className="font-bold text-sm text-slate-800">Direct / Annual Fee</h3>
-                  <p className="text-xs text-slate-600 mt-1">Convenient once-a-year subscription until Check-Off facility is fully operational.</p>
-                </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] text-blue-700 font-semibold flex items-center gap-1">
-                  <CreditCard className="w-3.5 h-3.5" /> Flexible Remittance
                 </div>
               </div>
             </div>
@@ -651,7 +639,7 @@ export default function MembershipSection() {
                           </div>
                         </div>
                         <div className="text-[11px] font-bold text-emerald-900 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300 w-fit">
-                          Fee: &#8377;1,306 (Annual) / &#8377;118 (Monthly)
+                          Fee: &#8377;1,306 (Annual: &#8377;1,296 + &#8377;10 Admission)
                         </div>
                       </div>
 
@@ -721,8 +709,7 @@ export default function MembershipSection() {
                           onChange={handleInputChange}
                           className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none bg-white transition-all"
                         >
-                          <option value="annual">Annual Subscription (&#8377;1,296 + &#8377;10 Admission)</option>
-                          <option value="monthly">Monthly Subscription (&#8377;108 / month + &#8377;10 Admission)</option>
+                          <option value="annual">Annual Subscription (&#8377;1,296 + &#8377;10 Admission = &#8377;1,306)</option>
                           <option value="checkoff">Salary Deduction via Check-Off (When approved)</option>
                         </select>
                       </div>

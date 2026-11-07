@@ -70,8 +70,8 @@ export default function HeroSection() {
               <div className="text-xs text-slate-300 font-medium">Equal Opportunity Basis</div>
             </div>
             <div className="bg-slate-800/60 border border-slate-700/60 p-3.5 sm:p-4 rounded-xl">
-              <div className="text-amber-400 font-black text-lg sm:text-xl mb-1">&#8377;108 / Month</div>
-              <div className="text-xs text-slate-300 font-medium">Mutual Welfare Pool</div>
+              <div className="text-amber-400 font-black text-lg sm:text-xl mb-1">&#8377;1,296 / Year</div>
+              <div className="text-xs text-slate-300 font-medium">Annual Welfare Pool</div>
             </div>
           </div>
         </div>

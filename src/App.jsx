@@ -11,6 +11,7 @@ import DownloadsSection from './components/DownloadsSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import AIChatbot from './components/AIChatbot';
+import WhatsAppWidget from './components/WhatsAppWidget';
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
       </main>
       <Footer />
       <AIChatbot />
+      <WhatsAppWidget />
     </div>
   );
 }

@@ -9,6 +9,7 @@ export const associationInfo = {
   jurisdiction: 'Andhra Pradesh extended to the Whole of India',
   email: 'cbgcswa@gmail.com',
   phone: '+91 7022362775',
+  whatsapp: '+91 8977128003',
   address: {
     doorNo: 'H.No: 21-46-K1',
     landmark: 'Balkonda Hall, Uppari Peta',

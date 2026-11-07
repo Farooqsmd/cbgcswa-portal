@@ -230,6 +230,9 @@ export default function AIChatbot() {
       q.includes('contact') || 
       q.includes('phone') || 
       q.includes('mobile') || 
+      q.includes('whatsapp') || 
+      q.includes('wa.me') || 
+      q.includes('8977128003') || 
       q.includes('email') || 
       q.includes('address') || 
       q.includes('office') || 
@@ -239,10 +242,11 @@ export default function AIChatbot() {
     ) {
       return {
         text: `**Central Secretariat Contact Channels:**\n\n` +
-              `• **Registered Office:** ${associationInfo.address.doorNo}, ${associationInfo.address.landmark}, ${associationInfo.address.city} - ${associationInfo.address.pincode}, ${associationInfo.address.state}, India.\n` +
-              `• **Official Email:** ${associationInfo.email}\n` +
+              `• **Official WhatsApp Helpdesk:** +91 8977128003 (Direct member coordinator for payment UTRs, receipts & guidance)\n` +
               `• **Helpline / Phone:** ${associationInfo.phone}\n` +
-              `• **Availability:** Bank working hours and weekends.`,
+              `• **Official Email:** ${associationInfo.email}\n` +
+              `• **Registered Office:** ${associationInfo.address.doorNo}, ${associationInfo.address.landmark}, ${associationInfo.address.city} - ${associationInfo.address.pincode}, ${associationInfo.address.state}, India.\n` +
+              `• **Availability:** Regular banking hours and weekends.`,
         action: { label: 'Contact Secretariat', section: 'contact' }
       };
     }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Mail, Phone, Send, CheckCircle2, Building2, Clock, Copy, Check, CreditCard } from 'lucide-react';
+import { MapPin, Mail, Phone, Send, CheckCircle2, Building2, Clock, Copy, Check, CreditCard, MessageCircle } from 'lucide-react';
 import { associationInfo } from '../data/associationData';
 
 export default function ContactSection() {
@@ -82,6 +82,24 @@ export default function ContactSection() {
                     <div className="text-[11px] text-slate-400 font-semibold uppercase">General Secretary / Helpline</div>
                     <a href={`tel:${associationInfo.phone}`} className="font-bold text-slate-800 hover:underline">
                       {associationInfo.phone}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                    <MessageCircle className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-[11px] text-slate-400 font-semibold uppercase">Official WhatsApp Helpdesk</div>
+                    <a 
+                      href={`https://wa.me/918977128003`} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="font-bold text-emerald-700 hover:underline flex items-center gap-1.5"
+                    >
+                      <span>+91 8977128003</span>
+                      <span className="text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">Chat Now</span>
                     </a>
                   </div>
                 </div>

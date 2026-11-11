@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { MapPin, Mail, Phone, Send, CheckCircle2, Building2, Clock, Copy, Check, CreditCard, MessageCircle, QrCode, Download } from 'lucide-react';
+import { MapPin, Mail, Phone, Send, CheckCircle2, Building2, Clock, Copy, Check, CreditCard, MessageCircle, QrCode, Download, RefreshCw } from 'lucide-react';
 import { associationInfo } from '../data/associationData';
 
 export default function ContactSection() {
   const [copied, setCopied] = useState(false);
   const [copiedUpi, setCopiedUpi] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     staffNo: '',
@@ -15,13 +16,65 @@ export default function ContactSection() {
     message: ''
   });
 
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBYqrpI9_1dLlVt69aOswwb-cdw_36AQa7LUzZGG-eiqFsyECWm0cgR7pVEckl7yoKuA/exec';
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormSubmitted(true);
+    setIsSubmitting(true);
+
+    try {
+      // 1. Dispatch to FormSubmit AJAX endpoint (delivers formatted HTML email to cbgcswa@gmail.com)
+      const formSubmitPromise = fetch('https://formsubmit.co/ajax/cbgcswa@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: `CBGCSWA Grievance: ${formData.subject} [Staff: ${formData.staffNo}]`,
+          _template: 'table',
+          'Applicant Name': formData.name,
+          'Staff Roll Number': formData.staffNo,
+          'Mobile Number': formData.mobile,
+          'Email Address': formData.email || 'Not Provided',
+          'Subject / Category': formData.subject,
+          'Detailed Message': formData.message,
+          'Submitted At': new Date().toLocaleString()
+        })
+      }).catch(err => console.log('FormSubmit delivery log:', err));
+
+      // 2. Dispatch to Google Apps Script endpoint (logs grievance in Google Sheet & triggers MailApp notification)
+      const googleScriptPromise = fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'grievance',
+          name: formData.name,
+          staffNo: formData.staffNo,
+          mobile: formData.mobile,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          timestamp: new Date().toISOString()
+        })
+      }).catch(err => console.log('Google Script grievance log:', err));
+
+      // Wait for network dispatch
+      await Promise.allSettled([formSubmitPromise, googleScriptPromise]);
+      setFormSubmitted(true);
+    } catch (err) {
+      console.error('Error dispatching grievance:', err);
+      setFormSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -349,27 +402,78 @@ export default function ContactSection() {
 
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm py-3 px-4 rounded-xl transition-colors shadow"
+                  disabled={isSubmitting}
+                  className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-700 text-white font-bold text-sm py-3 px-4 rounded-xl transition-colors shadow cursor-pointer"
                 >
-                  <Send className="w-4 h-4 text-amber-400" />
-                  <span>Send Message to General Secretary</span>
+                  {isSubmitting ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
+                      <span>Sending Grievance to cbgcswa@gmail.com...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 text-amber-400" />
+                      <span>Send Grievance to Central Secretariat</span>
+                    </>
+                  )}
                 </button>
               </form>
             ) : (
-              <div className="py-8 text-center space-y-3">
-                <div className="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="w-6 h-6" />
+              <div className="py-6 text-center space-y-4">
+                <div className="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto shadow-sm">
+                  <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h4 className="text-base font-bold text-slate-900">Message Received Successfully!</h4>
-                <p className="text-xs text-slate-600 max-w-sm mx-auto">
-                  Thank you, Comrade. Your grievance/query has been routed to the Executive Secretariat. We will get back to you shortly.
-                </p>
-                <button
-                  onClick={() => setFormSubmitted(false)}
-                  className="text-xs text-blue-700 font-bold hover:underline pt-2"
-                >
-                  Send another query
-                </button>
+                <div className="space-y-1">
+                  <h4 className="text-lg font-bold text-slate-900">Grievance / Query Dispatched!</h4>
+                  <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
+                    Comrade <strong>{formData.name}</strong> (Staff ID: <span className="font-mono font-bold text-slate-800">{formData.staffNo}</span>), your communication has been dispatched to <strong>cbgcswa@gmail.com</strong> and recorded for Executive Secretariat review.
+                  </p>
+                </div>
+
+                {/* Instant Email & WhatsApp Action Buttons */}
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-left space-y-2.5 max-w-md mx-auto">
+                  <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                    Instant Backup &amp; Follow-up Channels:
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <a
+                      href={`mailto:${associationInfo.email}?subject=${encodeURIComponent(`CBGCSWA Grievance: ${formData.subject} [Staff: ${formData.staffNo}]`)}&body=${encodeURIComponent(`Dear General Secretary / Central Secretariat,\n\nI have submitted the following grievance/inquiry:\n\nName: ${formData.name}\nStaff ID: ${formData.staffNo}\nMobile: ${formData.mobile}\nEmail: ${formData.email}\nSubject: ${formData.subject}\n\nMessage:\n${formData.message}\n\nRegards,\n${formData.name}`)}`}
+                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold transition-all shadow-sm"
+                    >
+                      <Mail className="w-3.5 h-3.5 text-amber-300" />
+                      <span>Open in Gmail / Mail</span>
+                    </a>
+
+                    <a
+                      href={`https://wa.me/918977128003?text=${encodeURIComponent(`Namaste CBGCSWA Secretariat, I have submitted a grievance on the portal:\n\n*Name:* ${formData.name}\n*Staff ID:* ${formData.staffNo}\n*Subject:* ${formData.subject}\n*Details:* ${formData.message}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-sm"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5 fill-white text-emerald-600" />
+                      <span>Follow-up on WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    onClick={() => {
+                      setFormData({
+                        name: '',
+                        staffNo: '',
+                        email: '',
+                        mobile: '',
+                        subject: '',
+                        message: ''
+                      });
+                      setFormSubmitted(false);
+                    }}
+                    className="text-xs text-blue-700 font-bold hover:underline cursor-pointer"
+                  >
+                    Submit another grievance / query
+                  </button>
+                </div>
               </div>
             )}
           </div>

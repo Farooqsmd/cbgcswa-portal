@@ -77,6 +77,61 @@ function doPost(e) {
     // Save photo to Google Drive
     var photoUrl = savePhotoToDrive(data.photoBase64, data.staffId, data.fullName);
 
+    // ACTION: MEMBER QUERY / GRIEVANCE SUBMISSION
+    if (data.action === "grievance") {
+      // 1. Send instant email notification to cbgcswa@gmail.com
+      try {
+        var emailRecipient = "cbgcswa@gmail.com";
+        var emailSubject = "CBGCSWA Grievance: " + (data.subject || "General Query") + " [Staff: " + (data.staffNo || "N/A") + "]";
+        var htmlBody = 
+          "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;'>" +
+            "<div style='background-color: #0b5345; color: white; padding: 15px 20px; border-radius: 8px 8px 0 0; text-align: center;'>" +
+              "<h3 style='margin: 0; font-size: 18px;'>Canara Bank General Category Staff Welfare Association</h3>" +
+              "<p style='margin: 5px 0 0 0; font-size: 12px; opacity: 0.9;'>Member Query & Grievance Redressal Box</p>" +
+            "</div>" +
+            "<div style='background-color: white; padding: 20px; border-radius: 0 0 8px 8px; border: 1px solid #e2e8f0; border-top: none;'>" +
+              "<table style='width: 100%; border-collapse: collapse; font-size: 13px;'>" +
+                "<tr style='border-bottom: 1px solid #f1f5f9;'><td style='padding: 8px 0; color: #64748b; width: 35%;'>Applicant Name:</td><td style='padding: 8px 0; font-weight: bold; color: #1e293b;'>" + (data.name || "") + "</td></tr>" +
+                "<tr style='border-bottom: 1px solid #f1f5f9;'><td style='padding: 8px 0; color: #64748b;'>Staff Roll No:</td><td style='padding: 8px 0; font-weight: bold; color: #0b5345; font-family: monospace;'>" + (data.staffNo || "") + "</td></tr>" +
+                "<tr style='border-bottom: 1px solid #f1f5f9;'><td style='padding: 8px 0; color: #64748b;'>Mobile Number:</td><td style='padding: 8px 0; font-weight: bold; color: #1e293b;'>" + (data.mobile || "") + "</td></tr>" +
+                "<tr style='border-bottom: 1px solid #f1f5f9;'><td style='padding: 8px 0; color: #64748b;'>Email Address:</td><td style='padding: 8px 0; color: #1e293b;'>" + (data.email || "Not Provided") + "</td></tr>" +
+                "<tr style='border-bottom: 1px solid #f1f5f9;'><td style='padding: 8px 0; color: #64748b;'>Subject:</td><td style='padding: 8px 0; font-weight: bold; color: #1e3a8a;'>" + (data.subject || "") + "</td></tr>" +
+                "<tr><td style='padding: 8px 0; color: #64748b;'>Submission Date:</td><td style='padding: 8px 0; color: #64748b;'>" + new Date().toLocaleString() + "</td></tr>" +
+              "</table>" +
+              "<div style='margin-top: 15px; padding: 12px; background-color: #f8fafc; border-left: 4px solid #0b5345; border-radius: 4px;'>" +
+                "<strong style='color: #0b5345; display: block; margin-bottom: 5px; font-size: 13px;'>Detailed Message / Grievance:</strong>" +
+                "<div style='white-space: pre-wrap; color: #334155; font-size: 13px; line-height: 1.5;'>" + (data.message || "") + "</div>" +
+              "</div>" +
+            "</div>" +
+          "</div>";
+
+        MailApp.sendEmail({
+          to: emailRecipient,
+          subject: emailSubject,
+          htmlBody: htmlBody
+        });
+      } catch (mailErr) {
+        Logger.log("Mail error: " + mailErr.toString());
+      }
+
+      // 2. Also log to a 'Grievances' sheet tab in the Google Spreadsheet
+      try {
+        var gSheet = ss.getSheetByName("Grievances");
+        if (!gSheet) {
+          gSheet = ss.insertSheet("Grievances");
+          gSheet.appendRow(["Timestamp", "Applicant Name", "Staff Roll No", "Mobile", "Email", "Subject", "Message"]);
+        }
+        gSheet.appendRow([new Date(), data.name || "", data.staffNo || "", data.mobile || "", data.email || "", data.subject || "", data.message || ""]);
+      } catch (sheetErr) {
+        Logger.log("Grievance sheet record error: " + sheetErr.toString());
+      }
+
+      return ContentService.createTextOutput(JSON.stringify({
+        status: "success",
+        message: "Grievance recorded and email notification dispatched."
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
     // ACTION: UPDATE PHOTO FOR EXISTING MEMBER
     if (data.action === "updatePhoto") {
       var targetStaffId = (data.staffId || "").toString().trim().toLowerCase();

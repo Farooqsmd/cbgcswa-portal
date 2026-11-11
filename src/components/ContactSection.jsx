@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { MapPin, Mail, Phone, Send, CheckCircle2, Building2, Clock, Copy, Check, CreditCard, MessageCircle } from 'lucide-react';
+import { MapPin, Mail, Phone, Send, CheckCircle2, Building2, Clock, Copy, Check, CreditCard, MessageCircle, QrCode, Download } from 'lucide-react';
 import { associationInfo } from '../data/associationData';
 
 export default function ContactSection() {
   const [copied, setCopied] = useState(false);
+  const [copiedUpi, setCopiedUpi] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -116,43 +117,25 @@ export default function ContactSection() {
               </div>
             </div>
 
-            {/* Official Bank Account Details */}
-            <div className="bg-emerald-50/90 border-2 border-emerald-500/40 p-6 rounded-2xl shadow-sm space-y-3.5">
-              <div className="flex items-center justify-between">
+            {/* Official Bank Account & QR Code Details */}
+            <div className="bg-emerald-50/90 border-2 border-emerald-500/40 p-6 rounded-2xl shadow-sm space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-emerald-200">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shadow-sm">
                     CB
                   </div>
                   <div>
                     <span className="text-[11px] font-black uppercase text-emerald-950 tracking-wider block">
-                      Association Bank Account
+                      Association Bank Account &amp; QR
                     </span>
                     <span className="text-[11px] text-emerald-700 font-semibold">
-                      Canara Bank Official Account
+                      Canara Bank Official Remittance
                     </span>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    navigator?.clipboard?.writeText(associationInfo.bankAccount?.accountNumber || '110112092968');
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 2500);
-                  }}
-                  className="text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 cursor-pointer bg-emerald-100 hover:bg-emerald-200 px-2.5 py-1 rounded-md transition-colors"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-emerald-700" />
-                      <span>Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5 text-emerald-700" />
-                      <span>Copy No.</span>
-                    </>
-                  )}
-                </button>
+                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  &#8377;10 Fee Waived
+                </span>
               </div>
 
               <div>
@@ -168,9 +151,32 @@ export default function ContactSection() {
               </div>
 
               <div>
-                <span className="text-[11px] font-bold uppercase text-emerald-800 block mb-1">
-                  Account Number:
-                </span>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] font-bold uppercase text-emerald-800">
+                    Account Number:
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator?.clipboard?.writeText(associationInfo.bankAccount?.accountNumber || '110112092968');
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2500);
+                    }}
+                    className="text-[11px] font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 cursor-pointer bg-emerald-100 hover:bg-emerald-200 px-2 py-0.5 rounded transition-colors"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-700" />
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5 text-emerald-700" />
+                        <span>Copy No.</span>
+                      </>
+                    )}
+                  </button>
+                </div>
                 <div 
                   onClick={() => {
                     navigator?.clipboard?.writeText(associationInfo.bankAccount?.accountNumber || '110112092968');
@@ -182,9 +188,69 @@ export default function ContactSection() {
                 >
                   {associationInfo.bankAccount.accountNumber}
                 </div>
-                <div className="text-[10px] text-emerald-700 italic text-center mt-1">
-                  ({associationInfo.bankAccount.verificationNote})
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] font-bold uppercase text-emerald-800">
+                    UPI ID:
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator?.clipboard?.writeText(associationInfo.bankAccount?.upiId || '110112092968@canara');
+                      setCopiedUpi(true);
+                      setTimeout(() => setCopiedUpi(false), 2500);
+                    }}
+                    className="text-[11px] font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 cursor-pointer bg-emerald-100 hover:bg-emerald-200 px-2 py-0.5 rounded transition-colors"
+                  >
+                    {copiedUpi ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-700" />
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5 text-emerald-700" />
+                        <span>Copy UPI</span>
+                      </>
+                    )}
+                  </button>
                 </div>
+                <div 
+                  onClick={() => {
+                    navigator?.clipboard?.writeText(associationInfo.bankAccount?.upiId || '110112092968@canara');
+                    setCopiedUpi(true);
+                    setTimeout(() => setCopiedUpi(false), 2500);
+                  }}
+                  title="Click to copy UPI ID"
+                  className="bg-emerald-900/90 text-amber-300 font-mono font-bold text-sm py-1.5 px-3 rounded-lg text-center tracking-wide shadow-inner cursor-pointer"
+                >
+                  {associationInfo.bankAccount.upiId || '110112092968@canara'}
+                </div>
+              </div>
+
+              {/* Bank QR Code Box */}
+              <div className="pt-2 text-center bg-white p-3 rounded-xl border border-emerald-200 space-y-2">
+                <div className="text-[11px] font-bold text-emerald-900 flex items-center justify-center gap-1">
+                  <QrCode className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>Scan &amp; Pay (All UPI Apps)</span>
+                </div>
+                <img 
+                  src="/bank-qr-code.jpeg" 
+                  alt="Canara Bank QR" 
+                  className="w-32 h-auto mx-auto rounded-lg border border-slate-200 shadow-sm"
+                />
+                <a
+                  href="/bank-qr-code.jpeg"
+                  download="Canara-Bank-CBGCSWA-QR.jpeg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-900 underline"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download Bank QR</span>
+                </a>
               </div>
             </div>
           </div>

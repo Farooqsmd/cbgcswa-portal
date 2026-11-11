@@ -97,16 +97,18 @@ export default function AIChatbot() {
       q.includes('110112092968')
     ) {
       return {
-        text: `Here are the official **Canara Bank Account Details** for membership subscription remittance:\n\n` +
+        text: `Here are the official **Canara Bank Account & UPI Details** for membership remittance:\n\n` +
               `• **Account Name:** CBGCSWA (Canara Bank General Category Staff Welfare Association)\n` +
               `• **Account Number:** **${associationInfo.bankAccount.accountNumber}**\n` +
               `• **Bank:** Canara Bank\n` +
-              `• **Annual Fee:** ₹1,296 (Welfare Pool) + ₹10 (One-time Admission) = **₹1,306 Total**\n\n` +
+              `• **UPI ID:** **${associationInfo.bankAccount.upiId || '110112092968@canara'}**\n` +
+              `• **Bank QR Code:** Official Canara Bank QR code is active on the website (Scan & Pay with any UPI app, Canara ai1, or Digital Rupee).\n` +
+              `• **Payable Subscription:** **₹1,296** (🎉 Special Waiver: ₹10 Application Fee is completely WAIVED up to March 31, 2027!)\n\n` +
               `**How to Pay:**\n` +
-              `1. Transfer ₹1,306 using Canara Bank NetBanking, CANDI Mobile App, NEFT, IMPS, or any UPI App.\n` +
+              `1. Scan the Bank QR code or transfer ₹1,296 via UPI / CANDI Mobile / NetBanking.\n` +
               `2. Note down your **12-digit UTR / UPI Reference Number**.\n` +
               `3. Enter this UTR in the mandatory Transaction ID field during online enrolment.`,
-        action: { label: 'Go to Online Enrolment Form', section: 'membership' },
+        action: { label: 'Go to Online Enrolment Form & QR Code', section: 'membership' },
         showAccountPill: true
       };
     }
@@ -127,7 +129,7 @@ export default function AIChatbot() {
         text: `**Eligibility & Registration Process:**\n\n` +
               `• **Who can join:** Every permanent General Category employee of Canara Bank across India (Officers Scale I to V+, Clerks/Special Assistants, and Sub-staff/Peons/Daftaries).\n\n` +
               `**3 Quick Steps to Enroll:**\n` +
-              `1. **Remit Fee:** Transfer ₹1,306 to Canara Bank A/c **${associationInfo.bankAccount.accountNumber}**.\n` +
+              `1. **Remit Fee:** Scan Bank QR or transfer ₹1,296 (₹10 application fee waived off up to March 31, 2027) to Canara Bank A/c **${associationInfo.bankAccount.accountNumber}** or UPI **${associationInfo.bankAccount.upiId}**.\n` +
               `2. **Fill Details:** Enter your Staff ID, Name, Cadre, Branch, DP Code, Circle/RO, and upload your passport photo.\n` +
               `3. **Submit with UTR:** Enter your payment Transaction ID / UTR and submit to receive your instant printable Acknowledgment Slip!`,
         action: { label: 'Open Enrolment Form', section: 'membership' }
@@ -290,7 +292,7 @@ export default function AIChatbot() {
     return {
       text: `I understand you are asking about *"userText"*. \n\n` +
             `As the official **CBGCSWA Welfare Assistant**, I can assist you with:\n` +
-            `1. **Membership Enrolment & Fee Payment** (₹1,306 to A/c ${associationInfo.bankAccount.accountNumber})\n` +
+            `1. **Membership Enrolment & Fee Payment** (₹1,296 to A/c ${associationInfo.bankAccount.accountNumber} • ₹10 Admission Fee Waived off Upto 31-03-2027)\n` +
             `2. **Photo ID Card Issuance & Approval Status**\n` +
             `3. **Check-Off Parity with Ministry of Finance & DFS**\n` +
             `4. **Association Bye-Laws & Reg. No. 99 of 2023**\n` +

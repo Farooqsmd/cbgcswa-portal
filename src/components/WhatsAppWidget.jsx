@@ -105,7 +105,8 @@ export default function WhatsAppWidget() {
                 You can chat directly with our representative at <strong className="font-mono text-emerald-700">{displayPhone}</strong> for:
               </p>
               <ul className="text-slate-600 text-xs list-disc list-inside space-y-1 pl-1">
-                <li>Sending membership payment UTR / screenshot</li>
+                <li>Sending payment UTR / screenshot (&#8377;1,296 &bull; &#8377;10 Fee Waived)</li>
+                <li>Assistance with Canara Bank QR Code &amp; UPI payment</li>
                 <li>Instant membership &amp; enrolment guidance</li>
                 <li>Digital Photo ID card verification</li>
               </ul>

@@ -17,7 +17,9 @@ import {
   UploadCloud,
   Lock,
   ArrowRight,
-  Copy
+  Copy,
+  QrCode,
+  Maximize2
 } from 'lucide-react';
 import { associationInfo } from '../data/associationData';
 
@@ -56,6 +58,8 @@ export default function MembershipSection() {
   const [updatingPhoto, setUpdatingPhoto] = useState(false);
   const [photoUpdateSuccess, setPhotoUpdateSuccess] = useState(false);
   const [copiedAccount, setCopiedAccount] = useState(false);
+  const [copiedUpi, setCopiedUpi] = useState(false);
+  const [showQrModal, setShowQrModal] = useState(false);
   const cardPhotoInputRef = useRef(null);
 
   const handleCopyAccountNo = () => {
@@ -64,6 +68,15 @@ export default function MembershipSection() {
       navigator.clipboard.writeText(accNo);
       setCopiedAccount(true);
       setTimeout(() => setCopiedAccount(false), 2500);
+    }
+  };
+
+  const handleCopyUpi = () => {
+    const upi = associationInfo.bankAccount?.upiId || '110112092968@canara';
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(upi);
+      setCopiedUpi(true);
+      setTimeout(() => setCopiedUpi(false), 2500);
     }
   };
 
@@ -387,27 +400,53 @@ export default function MembershipSection() {
           <>
             {/* Fee Information Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12">
-              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
-                <div>
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">One-Time</span>
-                  <div className="text-2xl font-black text-slate-900 mt-1 mb-2">&#8377;10 Only</div>
-                  <h3 className="font-bold text-sm text-slate-800">Admission Fee</h3>
-                  <p className="text-xs text-slate-600 mt-1">Nominal one-time admission fee as prescribed in Bye-Law Rule 2.</p>
+              <div className="bg-emerald-50/70 p-6 rounded-2xl border-2 border-emerald-300 shadow-sm flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute -right-10 top-5 bg-emerald-600 text-white text-[9px] font-black uppercase tracking-wider py-1 px-10 rotate-45 shadow-sm">
+                  100% WAIVED
                 </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Prescribed in Bye-laws
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">Admission Fee</span>
+                    <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-900 border border-emerald-300">
+                      Upto 31-03-2027
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-2.5 mt-2 mb-2">
+                    <span className="text-3xl font-black text-emerald-700">&#8377;0</span>
+                    <span className="text-lg text-slate-400 line-through font-bold">&#8377;10</span>
+                    <span className="text-xs font-bold text-emerald-800 bg-white px-2 py-0.5 rounded border border-emerald-200">
+                      Zero Application Fee
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-sm text-slate-800">Inaugural Application Fee Waiver</h3>
+                  <p className="text-xs text-slate-600 mt-1">
+                    Special Executive Resolution: Nominal &#8377;10 admission fee is completely waived for all members up to March 31, 2027.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-emerald-200 text-[11px] text-emerald-800 font-semibold flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Active Waiver: Pay &#8377;0 Application Fee
                 </div>
               </div>
 
               <div className="bg-gradient-to-br from-blue-900 to-blue-950 text-white p-6 rounded-2xl shadow-md flex flex-col justify-between">
                 <div>
-                  <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Annual Option</span>
-                  <div className="text-2xl font-black text-white mt-1 mb-2">&#8377;1,296 / Year</div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Annual Subscription</span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                      Total Payable
+                    </span>
+                  </div>
+                  <div className="text-3xl font-black text-white mt-2 mb-2">&#8377;1,296 / Year</div>
                   <h3 className="font-bold text-sm text-amber-200">Welfare Subscription</h3>
-                  <p className="text-xs text-slate-300 mt-1">Convenient once-a-year subscription dedicated entirely to member welfare and legal aid.</p>
+                  <p className="text-xs text-slate-300 mt-1">Convenient once-a-year subscription dedicated entirely to member welfare, administrative representation, and legal counsel.</p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-blue-800/80 text-[11px] text-amber-300 font-semibold flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5" /> Zero Commercial Expenses
+                <div className="mt-4 pt-3 border-t border-blue-800/80 text-[11px] text-amber-300 font-semibold flex items-center justify-between">
+                  <span className="flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5" /> 100% Dedicated Pool
+                  </span>
+                  <span className="font-mono text-emerald-400 font-bold text-xs bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">
+                    Net: &#8377;1,296 Only
+                  </span>
                 </div>
               </div>
             </div>
@@ -622,8 +661,8 @@ export default function MembershipSection() {
                       />
                     </div>
 
-                    {/* Official Association Bank Account Details Card */}
-                    <div className="bg-emerald-50/90 border-2 border-emerald-500/50 rounded-2xl p-5 shadow-sm">
+                    {/* Official Association Bank Account & QR Code Card */}
+                    <div className="bg-emerald-50/90 border-2 border-emerald-500/50 rounded-2xl p-5 shadow-sm space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3.5 border-b border-emerald-200">
                         <div className="flex items-center gap-2.5">
                           <div className="w-9 h-9 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-black text-xs shadow-sm shrink-0">
@@ -631,7 +670,7 @@ export default function MembershipSection() {
                           </div>
                           <div>
                             <span className="text-[11px] font-black uppercase tracking-wider text-emerald-950 block">
-                              Official Association Bank Account
+                              Official Association Bank Account &amp; UPI QR
                             </span>
                             <span className="text-xs text-emerald-700 font-bold">
                               Canara Bank &bull; Subscription Remittance
@@ -639,62 +678,143 @@ export default function MembershipSection() {
                           </div>
                         </div>
                         <div className="text-[11px] font-bold text-emerald-900 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300 w-fit">
-                          Fee: &#8377;1,306 (Annual: &#8377;1,296 + &#8377;10 Admission)
+                          Payable: &#8377;1,296 (&#8377;10 Application Fee Waived Upto 31-03-2027)
                         </div>
                       </div>
 
-                      <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                        <div className="space-y-1">
-                          <span className="text-[11px] font-bold uppercase text-emerald-800 block">
-                            Account Name:
-                          </span>
-                          <div className="text-sm font-extrabold text-slate-900 leading-snug">
-                            {associationInfo.bankAccount.shortAccountName}
+                      <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+                        {/* Left: Account & UPI Details (7 cols) */}
+                        <div className="md:col-span-7 space-y-3.5">
+                          <div className="space-y-0.5">
+                            <span className="text-[11px] font-bold uppercase text-emerald-800 block">
+                              Account Name:
+                            </span>
+                            <div className="text-sm font-extrabold text-slate-900 leading-snug">
+                              {associationInfo.bankAccount.shortAccountName}
+                            </div>
+                            <div className="text-xs text-slate-600 font-medium">
+                              (Canara Bank General Category Staff Welfare Association)
+                            </div>
                           </div>
-                          <div className="text-xs text-slate-600 font-medium">
-                            (Canara Bank General Category Staff Welfare Association)
+
+                          <div className="bg-white/90 p-3 rounded-xl border border-emerald-200">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[11px] font-bold uppercase text-emerald-800">
+                                Canara Bank Account No:
+                              </span>
+                              <button
+                                type="button"
+                                onClick={handleCopyAccountNo}
+                                className="text-[11px] font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 cursor-pointer bg-emerald-100 hover:bg-emerald-200 px-2 py-0.5 rounded transition-colors"
+                              >
+                                {copiedAccount ? (
+                                  <>
+                                    <Check className="w-3.5 h-3.5 text-emerald-700" />
+                                    <span>Copied!</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy className="w-3.5 h-3.5 text-emerald-700" />
+                                    <span>Copy A/c</span>
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                            <div 
+                              onClick={handleCopyAccountNo}
+                              title="Click to copy account number"
+                              className="bg-[#0b5345] hover:bg-[#084237] text-white font-mono font-black text-lg py-1.5 px-3 rounded-lg text-center tracking-wider shadow-inner cursor-pointer transition-colors"
+                            >
+                              {associationInfo.bankAccount.accountNumber}
+                            </div>
+                          </div>
+
+                          <div className="bg-white/90 p-3 rounded-xl border border-emerald-200">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[11px] font-bold uppercase text-emerald-800">
+                                UPI ID (Scan / VPA):
+                              </span>
+                              <button
+                                type="button"
+                                onClick={handleCopyUpi}
+                                className="text-[11px] font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 cursor-pointer bg-emerald-100 hover:bg-emerald-200 px-2 py-0.5 rounded transition-colors"
+                              >
+                                {copiedUpi ? (
+                                  <>
+                                    <Check className="w-3.5 h-3.5 text-emerald-700" />
+                                    <span>Copied!</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy className="w-3.5 h-3.5 text-emerald-700" />
+                                    <span>Copy UPI ID</span>
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                            <div 
+                              onClick={handleCopyUpi}
+                              title="Click to copy UPI ID"
+                              className="bg-emerald-900/90 hover:bg-emerald-950 text-amber-300 font-mono font-bold text-sm py-1.5 px-3 rounded-lg text-center tracking-wide shadow-inner cursor-pointer transition-colors"
+                            >
+                              {associationInfo.bankAccount.upiId || '110112092968@canara'}
+                            </div>
+                            <div className="text-[10px] text-slate-500 text-center mt-1">
+                              Supported on Canara ai1, BHIM, Google Pay, PhonePe, Paytm &amp; Digital Rupee
+                            </div>
                           </div>
                         </div>
 
-                        <div className="bg-white/80 p-3 rounded-xl border border-emerald-200">
-                          <div className="flex items-center justify-between mb-1.5">
-                            <span className="text-[11px] font-bold uppercase text-emerald-800">
-                              Account Number:
-                            </span>
-                            <button
-                              type="button"
-                              onClick={handleCopyAccountNo}
-                              className="text-[11px] font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 cursor-pointer bg-emerald-100 hover:bg-emerald-200 px-2.5 py-0.5 rounded-md transition-colors"
-                            >
-                              {copiedAccount ? (
-                                <>
-                                  <Check className="w-3.5 h-3.5 text-emerald-700" />
-                                  <span>Copied!</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Copy className="w-3.5 h-3.5 text-emerald-700" />
-                                  <span>Copy A/c</span>
-                                </>
-                              )}
-                            </button>
+                        {/* Right: Scan & Pay QR Card (5 cols) */}
+                        <div className="md:col-span-5 flex flex-col items-center justify-center p-3.5 bg-white rounded-2xl border-2 border-emerald-300 shadow-sm text-center">
+                          <div className="text-[11px] font-black uppercase text-emerald-900 tracking-wider mb-1.5 flex items-center gap-1">
+                            <QrCode className="w-3.5 h-3.5 text-emerald-700" />
+                            <span>Scan &amp; Pay via UPI</span>
                           </div>
                           
+                          {/* QR Thumbnail with click to enlarge */}
                           <div 
-                            onClick={handleCopyAccountNo}
-                            title="Click to copy account number"
-                            className="bg-[#0b5345] hover:bg-[#084237] text-white font-mono font-black text-lg sm:text-xl py-2 px-3 rounded-lg text-center tracking-wider shadow-inner cursor-pointer transition-colors"
+                            onClick={() => setShowQrModal(true)}
+                            className="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-200 shadow-inner bg-slate-50 p-1"
+                            title="Click to view full size QR code"
                           >
-                            {associationInfo.bankAccount.accountNumber}
+                            <img 
+                              src="/bank-qr-code.jpeg" 
+                              alt="Canara Bank QR Code" 
+                              className="w-36 h-auto object-contain rounded-lg transition-transform duration-200 group-hover:scale-105" 
+                            />
+                            <div className="absolute inset-0 bg-blue-950/40 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-1 text-white font-bold text-xs rounded-xl transition-opacity">
+                              <Maximize2 className="w-4 h-4" />
+                              <span>Enlarge</span>
+                            </div>
                           </div>
-                          <div className="text-[10px] text-emerald-700 italic text-center mt-1">
-                            ({associationInfo.bankAccount.verificationNote})
+
+                          <div className="mt-2 flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setShowQrModal(true)}
+                              className="text-[11px] font-bold text-blue-700 hover:text-blue-900 underline flex items-center gap-1 cursor-pointer"
+                            >
+                              <Maximize2 className="w-3 h-3" />
+                              <span>View Full QR</span>
+                            </button>
+                            <span className="text-slate-300">&bull;</span>
+                            <a
+                              href="/bank-qr-code.jpeg"
+                              download="Canara-Bank-CBGCSWA-QR.jpeg"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[11px] font-bold text-emerald-700 hover:text-emerald-900 underline flex items-center gap-1"
+                            >
+                              <Download className="w-3 h-3" />
+                              <span>Save QR</span>
+                            </a>
                           </div>
                         </div>
                       </div>
 
                       <div className="mt-3.5 pt-2.5 border-t border-emerald-200 text-[11px] text-emerald-800 leading-relaxed">
-                        <strong>Payment Instructions:</strong> Transfer the subscription fee using Canara Bank NetBanking, Mobile Banking (CANDI), NEFT, IMPS, or any UPI app to the account above. Copy the <strong>Transaction ID / UTR</strong> and paste it into the field below.
+                        <strong>Payment Instructions:</strong> Scan the QR code or transfer <strong>&#8377;1,296</strong> to Canara Bank A/c <strong>{associationInfo.bankAccount.accountNumber}</strong> / UPI: <strong>{associationInfo.bankAccount.upiId}</strong>. <em>(&#8377;10 application fee is waived off up to March 31, 2027)</em>. Copy the 12-digit <strong>Transaction ID / UTR</strong> and paste below.
                       </div>
                     </div>
 
@@ -707,9 +827,9 @@ export default function MembershipSection() {
                           name="paymentMode"
                           value={formData.paymentMode}
                           onChange={handleInputChange}
-                          className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none bg-white transition-all cursor-pointer"
+                          className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none bg-white transition-all cursor-pointer font-medium"
                         >
-                          <option value="annual">Annual Subscription (&#8377;1,296 + &#8377;10 Admission = &#8377;1,306)</option>
+                          <option value="annual">Annual Subscription (&#8377;1,296 &bull; &#8377;10 Application Fee Waived Upto March 31, 2027)</option>
                         </select>
                       </div>
 
@@ -1342,6 +1462,78 @@ export default function MembershipSection() {
         )}
 
       </div>
+
+      {/* High-Resolution Bank QR Code Zoom Modal */}
+      {showQrModal && (
+        <div 
+          className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 no-print animate-in fade-in duration-200"
+          onClick={() => setShowQrModal(false)}
+        >
+          <div 
+            className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 text-center relative space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowQrModal(false)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+              title="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="pt-2">
+              <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                Canara Bank Official QR
+              </span>
+              <h3 className="text-base font-bold text-slate-900 mt-1.5">
+                Scan &amp; Pay Subscription
+              </h3>
+              <p className="text-xs text-slate-500">
+                Scan with any UPI App or Canara ai1 Mobile
+              </p>
+            </div>
+
+            <div className="bg-slate-50 p-2 rounded-2xl border border-slate-200 shadow-inner flex items-center justify-center">
+              <img 
+                src="/bank-qr-code.jpeg" 
+                alt="Canara Bank Official QR Code" 
+                className="w-full max-w-[280px] h-auto object-contain rounded-xl shadow-sm"
+              />
+            </div>
+
+            <div className="space-y-1.5 text-xs">
+              <div className="flex items-center justify-between p-2 rounded-xl bg-slate-100 font-mono text-[11px]">
+                <span className="text-slate-500">UPI ID:</span>
+                <span className="font-bold text-slate-900">{associationInfo.bankAccount.upiId}</span>
+              </div>
+              <div className="text-[11px] text-emerald-800 font-bold">
+                Payable: &#8377;1,296 (&#8377;10 Application Fee Waived Upto 31-03-2027)
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-1">
+              <button
+                type="button"
+                onClick={handleCopyUpi}
+                className="flex-1 py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                {copiedUpi ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                <span>{copiedUpi ? 'Copied!' : 'Copy UPI'}</span>
+              </button>
+              <a
+                href="/bank-qr-code.jpeg"
+                download="Canara-Bank-CBGCSWA-QR.jpeg"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+              >
+                <Download className="w-4 h-4" />
+                <span>Download QR</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

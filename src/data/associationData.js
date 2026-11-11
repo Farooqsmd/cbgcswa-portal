@@ -21,14 +21,20 @@ export const associationInfo = {
   },
   membershipFees: {
     admission: 10,
+    admissionWaived: true,
+    waiverDescription: '₹10 Application Fee Waived Upto March 31, 2027',
+    waiverValidUntil: 'March 31, 2027',
     monthly: 108,
-    annual: 1296
+    annual: 1296,
+    payableTotal: 1296
   },
   bankAccount: {
     accountName: 'CBGCSWA (Canara Bank General Category Staff Welfare Association)',
     shortAccountName: 'CBGCSWA',
     accountNumber: '110112092968',
     bankName: 'Canara Bank',
+    upiId: '110112092968@canara',
+    qrCode: '/bank-qr-code.jpeg',
     verificationNote: 'Verify with your bank/UPI app'
   }
 };
